@@ -11,18 +11,30 @@ const arrToString = (acc) => {
 const recursive = (arr, acc, idx, deps) => {
   if (idx < arr.length) {
     if (Array.isArray(arr[idx])) {
-      deps = { prev: deps, prevArr: arr, prevAcc: acc, prevIdx: idx + 1 };
-      return recursive(arr[idx], null, 0, deps);
+      return recursive(arr[idx], null, 0, {
+        prev: deps,
+        prevArr: arr,
+        prevAcc: acc,
+        prevIdx: idx + 1,
+      });
     } else {
-      acc = { prevAcc: acc, element: elToString(arr[idx]) };
-      return recursive(arr, acc, idx + 1, deps);
+      return recursive(
+        arr,
+        { prevAcc: acc, element: elToString(arr[idx]) },
+        idx + 1,
+        deps
+      );
     }
   } else {
     const arrToStr = arrToString(acc);
     if (deps) {
       const { prev, prevArr, prevAcc, prevIdx } = deps;
-      acc = { prevAcc: prevAcc, element: arrToStr };
-      return recursive(prevArr, acc, prevIdx, prev);
+      return recursive(
+        prevArr,
+        { prevAcc: prevAcc, element: arrToStr },
+        prevIdx,
+        prev
+      );
     }
     return arrToStr;
   }
